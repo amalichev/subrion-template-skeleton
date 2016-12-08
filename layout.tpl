@@ -23,13 +23,16 @@
 
 		<link rel="shortcut icon" href="{if !empty($core.config.site_favicon)}{$core.page.nonProtocolUrl}uploads/{$core.config.site_favicon}{else}{$core.page.nonProtocolUrl}favicon.ico{/if}">
 
-		{ia_add_media files='jquery, subrion' order=0}
-		{ia_print_js files='_IA_TPL_bootstrap.min' order=1}
+		{ia_add_media files='jquery, subrion, bootstrap' order=0}
 		{ia_print_js files='_IA_TPL_app' order=999}
+
 
 		{ia_hooker name='smartyFrontAfterHeadSection'}
 
 		{ia_print_css display='on'}
+
+		{ia_print_css files='iabootstrap'}
+		{ia_print_css files='user-style'}
 
 		{ia_add_js}
 			intelli.pageName = '{$core.page.name}';
@@ -40,10 +43,74 @@
 		{/ia_add_js}
 	</head>
 
-	<body class="page-{$core.page.name}">
+	<body class="page-{$core.page.name} i18n-{$core.language.iso} {if $core.config.navbar_sticky} navbar-sticky{/if}">
+		<nav class="navbar{if $core.config.navbar_sticky} navbar-fixed-top{else} navbar-static-top{/if}{if $core.config.navbar_inverse} navbar-inverse{else} navbar-default{/if}">
+			<div class="container{if $core.config.navbar_fluid}-fluid{/if}">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand{if !$core.config.enable_text_logo} navbar-brand--img{/if}" href="{$smarty.const.IA_URL}">
+						{if $core.config.enable_text_logo}
+							{$core.config.logo_text}
+						{else}
+							{if !empty($core.config.site_logo)}
+								<img src="{$core.page.nonProtocolUrl}uploads/{$core.config.site_logo}" alt="{$core.config.site}" height="20">
+							{else}
+								<img src="{$img}logo.png" alt="{$core.config.site}" height="20">
+							{/if}
+						{/if}
+					</a>
+				</div>
+				<div class="collapse navbar-collapse" id="navbar-collapse">
+					{ia_blocks block='mainmenu'}
+					{if $core.config.search_navbar}
+						<form method="get" action="{$smarty.const.IA_URL}search/" class="navbar-form navbar-left hidden-sm">
+							<div class="input-group">
+								<input type="text" name="q" class="form-control" placeholder="{lang key='search'}">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></span></button>
+								</span>
+							</div>
+						</form>
+					{/if}
+					{ia_blocks block='account'}
+					{include 'language-selector.tpl'}
+				</div>
+			</div>
+		</nav>
+
+		{if isset($iaBlocks.teaser)}
+			<div class="container">
+				{ia_blocks block='teaser'}
+			</div>
+		{/if}
+
+		{ia_hooker name='smartyFrontBeforeBreadcrumb'}
+
+		{include 'breadcrumb.tpl'}
+
+		{if $core.config.enable_landing && 'index' == $core.page.name}
+			<div class="landing">
+				{ia_blocks block='landing'}
+			</div>
+		{else}
+			{ia_hooker name='smartyFrontBeforeNotifications'}
+			{include 'notification.tpl'}
+
+			{ia_hooker name='smartyFrontBeforeMainContent'}
+
+			<div class="container">
+				{$_content_}
+			</div>
+
+			{ia_hooker name='smartyFrontAfterMainContent'}
+		{/if}
 
 		<!-- SYSTEM STUFF -->
-
 		{if $core.config.cron}
 			<div style="display: none;">
 				<img src="{$core.page.nonProtocolUrl}cron/?{randnum}" width="1" height="1" alt="">

@@ -1,5 +1,5 @@
 {if 'mainmenu' == $position}
-	{ia_menu menus=$menu.contents class="nav navbar-nav navbar-right nav-main {$menu.classname}"}
+	{ia_menu menus=$menu.contents class="nav navbar-nav navbar-left {$menu.classname}"}
 {elseif 'inventory' == $position}
 	{ia_menu menus=$menu.contents class="nav-inventory hidden-sm hidden-xs pull-right {$menu.classname}"}
 {elseif 'account' == $position}
@@ -7,7 +7,7 @@
 		<ul class="nav navbar-nav navbar-right nav-account">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					{*printImage imgfile=$member.avatar title=$member.fullname|default:$member.username class='img-circle' gravatar=true email=$member.email*}
+					<i class="fa fa-user"></i>
 					{$member.fullname|default:$member.username}
 					<span class="caret"></span>
 				</a>
@@ -15,13 +15,18 @@
 				{ia_menu menus=$menu.contents class='dropdown-menu' loginout=true}
 			</li>
 			{access object='admin_access'}
-				<li><a rel="nofollow" href="{$smarty.const.IA_ADMIN_URL}" target="_blank" title="{lang key='admin_dashboard'}"><span class="fa fa-cog"></span><span class="hidden-lg"> {lang key='admin_dashboard'}</span></a></li>
+				<li>
+					<a rel="nofollow" href="{$smarty.const.IA_ADMIN_URL}" target="_blank" title="{lang key='admin_dashboard'}">
+						<i class="fa fa-cog"></i>
+						<span class="hidden-lg hidden-md hidden-sm">{lang key='admin_dashboard'}</span>
+					</a>
+				</li>
 			{/access}
 		</ul>
 	{else}
 		<ul class="nav navbar-nav navbar-right">
 			<li{if 'login' == $core.page.name} class="active"{/if}><a href="{$smarty.const.IA_URL}login/">{lang key='login'}</a></li>
-			<li{if 'registration' == $core.page.name} class="active"{/if}><a href="{$smarty.const.IA_URL}registration/">{lang key='register'}</a></li>
+			<li{if 'member_registration' == $core.page.name} class="active"{/if}><a href="{$smarty.const.IA_URL}registration/">{lang key='register'}</a></li>
 		</ul>
 	{/if}
 {elseif in_array($position, array('left', 'right', 'user1', 'user2', 'top'))}

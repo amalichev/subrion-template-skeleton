@@ -2,7 +2,8 @@ var gulp       = require("gulp"),
     imagemin   = require("gulp-imagemin"),
     sass       = require("gulp-sass"),
     sourcemaps = require("gulp-sourcemaps"),
-    cleanCSS   = require("gulp-clean-css");
+    cleanCSS   = require("gulp-clean-css"),
+    livereload = require('gulp-livereload');
 
 var config = {
     paths: {
@@ -34,10 +35,12 @@ gulp.task("sass", function() {
         .pipe(sass({outputStyle: "compressed"}))
         .pipe(cleanCSS())
         .pipe(sourcemaps.write("./"))
-        .pipe(gulp.dest(config.paths.sass.dest));
+        .pipe(gulp.dest(config.paths.sass.dest))
+        .pipe(livereload());
 });
 
 gulp.task("watch", function(){
+    livereload.listen();
     gulp.watch(config.paths.sass.src, ["sass"]);
 });
 
